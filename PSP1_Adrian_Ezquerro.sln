@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{E6096877-CF7A-4474-A6BC-613AE875388C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FView", "FView", "{82529FF2-0FD0-49EE-B0B0-E40FBC5E6ABD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6096877-CF7A-4474-A6BC-613AE875388C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6096877-CF7A-4474-A6BC-613AE875388C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6096877-CF7A-4474-A6BC-613AE875388C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6096877-CF7A-4474-A6BC-613AE875388C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E6096877-CF7A-4474-A6BC-613AE875388C} = {82529FF2-0FD0-49EE-B0B0-E40FBC5E6ABD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42337C8E-622D-4DD9-8489-64877D758D01}
+	EndGlobalSection
+EndGlobal
