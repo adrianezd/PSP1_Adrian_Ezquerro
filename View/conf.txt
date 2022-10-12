@@ -1,0 +1,3 @@
+DirectDelay=4
+LineasDelay=6
+ArchivosTotales=42
