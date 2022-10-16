@@ -10,11 +10,7 @@ namespace View
     public class Program
     {
         static ControladorHilos c = new ControladorHilos();
-        
 
-        BusinessLog BL = new BusinessLog();
-        BusinessConf BC = new BusinessConf();
-        string direc = "";
         static void Main(string[] args)
         {
             Menu();
@@ -58,7 +54,7 @@ namespace View
                 int delay = int.Parse(Console.ReadLine()) * 1000;
                 c.Delay(ControladorHilos.Type.Dir, delay);
             }
-            if (opcion == 0) { Console.WriteLine("sales"); }
+            if (opcion == 0) { }
         }
 
         static void SBMenuD()
@@ -90,20 +86,29 @@ namespace View
                 int delay = int.Parse(Console.ReadLine()) * 1000;
                 c.Delay(ControladorHilos.Type.Dir, delay);
             }
-            if (op == 0) { Menu(); }
+            if (op == 0) {
+                op=5;}
 
         }
 
         static void SBMenuH()
         {
 
+            Console.WriteLine("***************************************************");
+            Console.WriteLine("MENU DE HILOS");
+            Console.WriteLine("1 - Crear hilo");
+            Console.WriteLine("2 - Modificar Hilo");
+            Console.WriteLine("0 - Salir al menú principal ");
+            Console.WriteLine("***************************************************");
+            int op = int.Parse(Console.ReadLine());
+
         }
 
         static void Menu()
         {
-           
+
             int op = -1;
-            while (op != 0)
+            while (op != 5)
             {
                 Console.WriteLine("***************************************************");
                 Console.WriteLine("Servicios Asincronos");

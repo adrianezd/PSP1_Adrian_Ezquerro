@@ -36,8 +36,11 @@ namespace Data
     //si existe, escribe -> eso en business
     //clase para configuracion
     //clase para log (solo es escribir fichero (escribe splo cnd detecta cambio en el fichero))
-    //mismo log para los dos pero que diferencie cuando escriban
+    //hilo.servicio.delay
+    //hilo.servicio.GetType == Tipo que quieres
+    //coges el hilo que sea de ese -> si == ServicioFichero (dale este menu), si no, dale este otro menu
     //Environment.NewLine -> = \\n; lo mismo que poner salto de linea a mano pero mejor, te coge automatico el salto de linea del S.O dnd se ejectute
     //for(i=0,i<10,i++)
     //  contenido=linea+Environment.NewLine
     //metodo en data para escribir pisando lo que hay (writeAllText)
+    //typeof(IServicio)
