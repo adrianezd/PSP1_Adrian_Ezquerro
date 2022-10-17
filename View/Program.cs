@@ -35,17 +35,20 @@ namespace View
             if (opcion == 1)
             {
                 c.CrearHiloDirectorio();
+                SBMenuF();
             }
 
             if (opcion == 2)
             {
                 c.CrearHiloDirectorio();
+                SBMenuF();
             }
             if (opcion == 3)
             {
                 //Console.WriteLine("Introduce tu fichero");
                 //string fichero = Console.ReadLine();
                 c.Cambiar(ControladorHilos.Type.Dir, directory);
+                SBMenuF();
 
             }
 
@@ -54,6 +57,7 @@ namespace View
                 Console.WriteLine("Numero limite de lineas");
                 int lineas = int.Parse(Console.ReadLine());
                 c.LineasMax(lineas);
+                SBMenuF();
 
             }
 
@@ -62,8 +66,11 @@ namespace View
                 Console.WriteLine("De cuantos segundos es el delay");
                 int delay = int.Parse(Console.ReadLine()) * 1000;
                 c.Delay(ControladorHilos.Type.Dir, delay);
+                SBMenuF();
             }
-            if (opcion == 0) { }
+            if (opcion == 0) {
+               Menu();
+            }
         }
 
         static void SBMenuD()
@@ -82,11 +89,13 @@ namespace View
             if (op == 1)
             {
                 c.CrearHiloDirectorio();
+                SBMenuD();
             }
 
             if (op == 2)
             {
                 c.CrearHiloDirectorio();
+                SBMenuD();
             }
 
             if (op == 3)
@@ -94,7 +103,7 @@ namespace View
                 Console.WriteLine(directory);
                 //string fichero = Console.ReadLine();
                 c.ComprobarDirectorio(directory);
-                Console.ReadLine();
+                SBMenuD();
 
             }
             if (op == 4)
@@ -102,9 +111,9 @@ namespace View
                 Console.WriteLine("De cuantos segundos es el delay");
                 int delay = int.Parse(Console.ReadLine()) * 1000;
                 c.Delay(ControladorHilos.Type.Dir, delay);
+                SBMenuD();
             }
-            if (op == 0) {
-                op=5;}
+            if (op == 0) { Menu(); }
 
         }
 
@@ -118,6 +127,27 @@ namespace View
             Console.WriteLine("0 - Salir al menú principal ");
             Console.WriteLine("***************************************************");
             int op = int.Parse(Console.ReadLine());
+
+            if (op == 1)
+            {
+                SBMenuH();
+            }
+
+            if (op == 2)
+            {
+                SBMenuH();
+            }
+
+            if (op == 3)
+            {
+                SBMenuH();
+
+            }
+            if (op == 4)
+            {
+                SBMenuH();
+            }
+            if (op == 0) { Menu(); }
 
         }
 
