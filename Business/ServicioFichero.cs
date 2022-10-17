@@ -16,35 +16,51 @@ namespace Business
         public bool activo { get; set; }
         public int delay { get; set; }
         public BusinessConf conf { get; set; }
-        public BusinessLog log { get; set; }
+        public static BusinessLog log { get; set; } = new BusinessLog();
 
-        //public ServicioFichero F1 = new ServicioFichero();
-
+        public Data.ServicioFichero F1 = new Data.ServicioFichero();
+ 
         public void Comprobar(int lineas)
         {
             string fichero = "leer.txt";
+            //string fi = "C:/Users/adria/source/repos/PSP1_Adrian_Ezquerro/View/bin/Debug/leer2.txt";
             //if (RutaExiste(fichero))
             //    fichero = "@C:\\" + fichero;
-            FileStream fsR = new FileStream(fichero, FileMode.Open, FileAccess.Read);
-            StreamReader sr = new StreamReader(fsR);
-            string dep = sr.ReadToEnd();
-            Console.WriteLine("Tu dep es -->", dep);
+            //FileStream fsW = new FileStream(fi, FileMode.Create, FileAccess.Write);
+            //StreamWriter sw = new StreamWriter(fsW);
+            //FileStream fsR = new FileStream(fichero, FileMode.Open, FileAccess.Read);
+            //StreamReader sr = new StreamReader(fsR);
+            //string dep = sr.ReadToEnd();
+            //Console.WriteLine("Tu dep es -->" + dep);
             using (StreamReader r = new StreamReader(fichero))
             {
                 int i = 0;
                 while (r.ReadLine() != null) { i++; }
-                Console.WriteLine("contenido antes de comparar lineas ---> ", i);
+                Console.WriteLine("contenido antes de comparar lineas ---> "+ i);
 
                 //Console.WriteLine(lineCount.ToString(), "<-- es tu linecount");
+                Console.WriteLine(i + lineas);
                 if (i > lineas)
                 {
+                    string resta = (i - lineas).ToString();
+                    Console.WriteLine(resta + "es la resta");
+                    DateTime localDate = DateTime.Now;
+                    log.EscribirFichero("El numero de lineas " +resta + " ha sido sobrepasado con fecha de " + localDate.ToString());
                     Console.WriteLine("Hay " + i + " lineas" +  " y quieres borrar las " + lineas +  " primeras");
 
                     string contenido = GuardadoLineas(fichero);
-                    Console.WriteLine(" tu contenido ---> ", contenido);
-                    BorrarLineas(contenido, lineas);
+                    Console.WriteLine(" tu contenido ---> "+ contenido);
+                    string newContent = BorrarLineas(contenido, lineas);
                     Console.WriteLine("acabe");
-                    //Escribir en file?
+                    newContent = newContent.Replace(" ", String.Empty);
+                    Console.WriteLine(newContent + "mi nuevo contenido");
+                    r.Close();
+                    FileStream fsW = new FileStream(fichero, FileMode.Create, FileAccess.Write);
+                    StreamWriter sw = new StreamWriter(fsW);
+                    //sw.Write(newContent);
+                    sw.Write("");
+                    sw.WriteLine(newContent);
+                    sw.Close();
                     Console.ReadLine();
                 }
                 else { Console.WriteLine("No existe el fichero"); }
@@ -59,14 +75,13 @@ namespace Business
 
         public string GuardadoLineas(string fichero)
         {
-            string lineasTotales = "";
-            string[] basurilla = new string[10];
+            string cont;
             using (StreamReader r = new StreamReader(fichero))
             {
-                string cont = r.ReadToEnd();
-                Console.WriteLine("cont -->", cont);
+                cont = r.ReadToEnd();
+                Console.WriteLine("cont -->" + cont);
             }
-            return "";
+            return cont;
         }
 
         public string BorrarLineas(string input, int linesToSkip)
@@ -74,11 +89,11 @@ namespace Business
 
             string[] lines = input
             .Split(Environment.NewLine.ToCharArray())
-            .Skip(linesToSkip)
+            .Skip(linesToSkip+1)
             .ToArray();
 
             string output = string.Join(Environment.NewLine, lines);
-            Console.WriteLine("tu output ----> ", output);
+            Console.WriteLine("tu output ----> "+ output);
             return output;
 
             //int startIndex = 0;
@@ -91,7 +106,7 @@ namespace Business
         {
             using (StreamWriter w = new StreamWriter(fichero))
             {
-                
+                F1.Arrancar();
             }
         }
 

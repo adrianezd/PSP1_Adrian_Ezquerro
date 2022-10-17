@@ -17,33 +17,49 @@ namespace Business
         public void Comprobar(int id) { }
         public void Comprobar(string directorio)
         {
+            int line_number = 1;
+            int line_to_edit = 3;
+
             if (RutaExiste(directorio))
             {
-                directorio = "@C:\\Users\\adria\\source\\repos\\PSP1_Adrian_Ezquerro\\View\\conf.txt";
+                string conf = "conf.txt";
+                //directorio = "@C:\\Users\\adria\\source\\repos\\PSP1_Adrian_Ezquerro\\View\\bin\\debug";
+                string directory = Directory.GetCurrentDirectory();
+                //Console.WriteLine(directory + "mi directorio es");
                 string linea = null;
-                int i = 0;
-                StreamReader archivo = File.OpenText(directorio);
-                while (!archivo.EndOfStream)
-                {
-                    //Leer la 3ra línea:
-                    linea = archivo.ReadLine();
-                    if (++i == 3) break;
+                IEnumerable<string> cosasDirectorio = Directory.EnumerateFileSystemEntries(directory);
+                Console.WriteLine(cosasDirectorio.Count());
+                FileStream fsR = new FileStream(conf, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fsR);
+                sr.Close();
+                string line = File.ReadLines(conf).Skip(2).Take(1).First();
+                line = line.Split('=')[1];
+                int lineInt = Int32.Parse(line);
+                Console.WriteLine(line);
+                if (lineInt != cosasDirectorio.Count()) { 
+                    Console.WriteLine("Ha habido modificacion");
+                    lineChanger((cosasDirectorio.Count().ToString()), conf, line_to_edit);
+                    Console.ReadLine();
                 }
-                linea = linea.Split('=')[1].ToString();
-                int antiguoCount = 0;
-                antiguoCount = Convert.ToInt32(linea);
-                string[] contador = Directory.GetFileSystemEntries(directorio, "*", SearchOption.AllDirectories);
-                if (contador.Length != antiguoCount) { Console.WriteLine("Ha habido modificacion"); }
             }
             else { Console.WriteLine("No existe el directorio"); }
 
         }
 
+        public void lineChanger(string newText, string fileName, int line_to_edit)
+        {
+            newText = "contenidoDirectorio=" + newText;
+            string[] arrLine = File.ReadAllLines(fileName);
+            arrLine[line_to_edit - 1] = newText;
+            File.WriteAllLines(fileName, arrLine);
+        }
+
         public bool RutaExiste(string fichero)
         {
-            bool isPath = false;
-            if (File.Exists(fichero)) isPath = true;
-            return isPath;
+            //bool isPath = false;
+            //if (File.Exists(fichero)) isPath = true;
+            //return isPath;
+            return true;
         }
 
 
@@ -64,6 +80,12 @@ namespace Business
         public void DefineNumLineas(int lineas)
         {
             
+        }
+
+        public void GetAllFromDirectory(string directory)
+        {
+            IEnumerable<string> contenido = Directory.EnumerateFileSystemEntries(directory, "*", SearchOption.AllDirectories);
+            Console.WriteLine("el get all from directory saca " + contenido);
         }
 
         public void DefinirRuta(string ruta)

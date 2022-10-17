@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace View
     public class Program
     {
         static ControladorHilos c = new ControladorHilos();
+        static string directory = Directory.GetCurrentDirectory();
 
         static void Main(string[] args)
         {
@@ -21,26 +23,33 @@ namespace View
         {
             Console.WriteLine("***************************************************");
             Console.WriteLine("COMPROBAR LINEAS DE FICHERO");
-            Console.WriteLine("1 - ARRANCAR / PARAR "); //cnd detecte que se han pasado, escribe en log y conf y para hilo
-            Console.WriteLine("2 - Fichero a comprobar ");
-            Console.WriteLine("3 - Numero límite de lineas ");
-            Console.WriteLine("4 - Delay ");
+            Console.WriteLine("1 - ARRANCAR "); 
+            Console.WriteLine("2 - PARAR ");
+            Console.WriteLine("3 - Fichero a comprobar ");
+            Console.WriteLine("4 - Numero límite de lineas ");
+            Console.WriteLine("5 - Delay ");
             Console.WriteLine("0 - Salir al menú principal ");
+            Console.WriteLine("***************************************************");
             int opcion = int.Parse(Console.ReadLine());
 
             if (opcion == 1)
             {
                 c.CrearHiloDirectorio();
             }
+
             if (opcion == 2)
             {
-                Console.WriteLine("Introduce tu fichero");
-                string fichero = Console.ReadLine();
-                c.Cambiar(ControladorHilos.Type.Dir, fichero);
+                c.CrearHiloDirectorio();
+            }
+            if (opcion == 3)
+            {
+                //Console.WriteLine("Introduce tu fichero");
+                //string fichero = Console.ReadLine();
+                c.Cambiar(ControladorHilos.Type.Dir, directory);
 
             }
 
-            if (opcion == 3)
+            if (opcion == 4)
             {
                 Console.WriteLine("Numero limite de lineas");
                 int lineas = int.Parse(Console.ReadLine());
@@ -48,7 +57,7 @@ namespace View
 
             }
 
-            if (opcion == 4)
+            if (opcion == 5)
             {
                 Console.WriteLine("De cuantos segundos es el delay");
                 int delay = int.Parse(Console.ReadLine()) * 1000;
@@ -62,9 +71,10 @@ namespace View
 
             Console.WriteLine("***************************************************");
             Console.WriteLine("COMPROBAR MODIFIACIÓN DE DIRECTORIO");
-            Console.WriteLine("1 - ARRANCAR / PARAR");
-            Console.WriteLine("2 - Fichero a comprobar ");
-            Console.WriteLine("3 - Delay ");
+            Console.WriteLine("1 - ARRANCAR ");
+            Console.WriteLine("2 - PARAR ");
+            Console.WriteLine("3 - Fichero a comprobar ");
+            Console.WriteLine("4 - Delay ");
             Console.WriteLine("0 - Salir al menú principal ");
             Console.WriteLine("***************************************************");
             int op = int.Parse(Console.ReadLine());
@@ -73,14 +83,21 @@ namespace View
             {
                 c.CrearHiloDirectorio();
             }
+
             if (op == 2)
             {
-                Console.WriteLine("Introduce tu fichero");
-                string fichero = Console.ReadLine();
-                c.Cambiar(ControladorHilos.Type.Dir, fichero);
+                c.CrearHiloDirectorio();
+            }
+
+            if (op == 3)
+            {
+                Console.WriteLine(directory);
+                //string fichero = Console.ReadLine();
+                c.ComprobarDirectorio(directory);
+                Console.ReadLine();
 
             }
-            if (op == 3)
+            if (op == 4)
             {
                 Console.WriteLine("De cuantos segundos es el delay");
                 int delay = int.Parse(Console.ReadLine()) * 1000;
@@ -93,7 +110,7 @@ namespace View
 
         static void SBMenuH()
         {
-
+            c.Mostrar();
             Console.WriteLine("***************************************************");
             Console.WriteLine("MENU DE HILOS");
             Console.WriteLine("1 - Crear hilo");

@@ -15,11 +15,17 @@ namespace Business
 
         public static int count;
 
+        public ControladorHilos()
+        {
+            this.hilos = hilos;
+        }
+
         public enum Type
         {
             Dir,
             Fich
         }
+
         public Hilo GenerarHilo(IServicio tipo)
         {
             count++;
@@ -85,7 +91,18 @@ namespace Business
             SI.DefineNumLineas(lineas);
         }
 
+        public void ComprobarDirectorio(string directorio)
+        {
+            SD.Comprobar(directorio);
+        }
 
+        public void Mostrar()
+        {
+            foreach (Hilo h in hilos)
+            {
+                Console.WriteLine(h.ToString());
+            }
+        }
 
     }
 }

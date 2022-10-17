@@ -14,12 +14,13 @@ namespace Business
         bool estado;
         string dato2 = "";
         string dato3 = "";
-        public void EscribirFichero(string rutaC, string nombreArchivo, bool estado, string dato2, string dato3)
+        public void EscribirFichero(string contenido)
         {
-            DateTime utcDate = DateTime.UtcNow;
-            string rutatotal = rutaC + nombreArchivo;
-            string contenido = utcDate.ToString() + " -> " + dato2 + " " + dato3 + " " + estado.ToString();
-            File.WriteAllText(rutatotal, contenido);
+            string ficherin = "log.txt";
+            FileStream fsW = new FileStream(ficherin, FileMode.Append, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fsW);
+            sw.WriteLine(contenido);
+            sw.Close();
         }
 
     }
