@@ -28,23 +28,34 @@ namespace Business
                 //Console.WriteLine(directory + "mi directorio es");
                 string linea = null;
                 IEnumerable<string> cosasDirectorio = Directory.EnumerateFileSystemEntries(directory);
-                Console.WriteLine(cosasDirectorio.Count());
+                //Console.WriteLine(cosasDirectorio.Count());
                 FileStream fsR = new FileStream(conf, FileMode.Open, FileAccess.Read);
                 StreamReader sr = new StreamReader(fsR);
                 sr.Close();
                 string line = File.ReadLines(conf).Skip(2).Take(1).First();
                 line = line.Split('=')[1];
                 int lineInt = Int32.Parse(line);
-                Console.WriteLine(line);
+                //Console.WriteLine(line);
                 if (lineInt != cosasDirectorio.Count()) { 
-                    Console.WriteLine("Ha habido modificacion");
+                    //Console.WriteLine("Ha habido modificacion");
                     lineChanger((cosasDirectorio.Count().ToString()), conf, line_to_edit);
-                    Console.ReadLine();
+                    //Console.ReadLine();
                 }
             }
             else { Console.WriteLine("No existe el directorio"); }
 
         }
+
+        public void EscribirFichero(string cont)
+        {
+            string conf = "conf.txt";
+            int line_to_edit = 2;
+            cont = "direcRuta=" + cont;
+            string[] arrLine = File.ReadAllLines(conf);
+            arrLine[line_to_edit - 1] = cont;
+            File.WriteAllLines(conf, arrLine);
+        }
+
 
         public void lineChanger(string newText, string fileName, int line_to_edit)
         {
@@ -73,7 +84,10 @@ namespace Business
             File.AppendAllLines(archivo, contenido);
         }
 
-        public void Arrancar() { activo = true; }
+        public void Arrancar(string directorio, int lineas) { 
+            activo = true;
+            Comprobar(directorio);
+        }
 
         public void Parar() { activo = false; }
 
@@ -97,7 +111,15 @@ namespace Business
         }
         public void Duerme(int numero)
         {
-            System.Threading.Thread.Sleep(numero);
+            string conf = "conf.txt";
+            string newText ="";
+            int line_to_edit = 1;
+            newText = "direcDelay=" + numero;
+            string[] arrLine = File.ReadAllLines(conf);
+            arrLine[line_to_edit - 1] = newText;
+            File.WriteAllLines(conf, arrLine);
+
+            System.Threading.Thread.Sleep(numero * 1000);
         }
 
         public string AnadirRuta(string ruta)

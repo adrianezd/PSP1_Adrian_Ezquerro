@@ -19,7 +19,6 @@ namespace Data
             return File.Exists(fichero);
         }
 
-
         public void Arrancar() { 
             estado = true;
         }

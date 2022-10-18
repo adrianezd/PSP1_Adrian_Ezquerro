@@ -14,6 +14,7 @@ namespace Business
         bool estado;
         string dato2 = "";
         string dato3 = "";
+
         public void EscribirFichero(string contenido)
         {
             string ficherin = "log.txt";

@@ -16,105 +16,77 @@ namespace View
         static void Main(string[] args)
         {
             Menu();
-           
         }
 
-        static void SBMenuF()
+        static void SBMenuF(int hiloid)
         {
+            Hilo hilin = c.DevuelveHilo(hiloid);
+
             Console.WriteLine("***************************************************");
-            Console.WriteLine("COMPROBAR LINEAS DE FICHERO");
-            Console.WriteLine("1 - ARRANCAR "); 
-            Console.WriteLine("2 - PARAR ");
-            Console.WriteLine("3 - Fichero a comprobar ");
-            Console.WriteLine("4 - Numero límite de lineas ");
-            Console.WriteLine("5 - Delay ");
+            Console.WriteLine("BIENVENIDO AL MENU DE TU HILO " + hiloid);
+            hilin.Mostrar();
+            Console.WriteLine("1 - ARRANCAR/PARAR "); 
+            Console.WriteLine("2 - Fichero a comprobar ");
+            Console.WriteLine("3 - Numero límite de lineas ");
+            Console.WriteLine("4 - Delay ");
+            Console.WriteLine("5 - Borrar Hilo");
+            Console.WriteLine("6 - Guardar Configuracion");
             Console.WriteLine("0 - Salir al menú principal ");
             Console.WriteLine("***************************************************");
             int opcion = int.Parse(Console.ReadLine());
 
             if (opcion == 1)
             {
-                c.CrearHiloDirectorio();
-                SBMenuF();
+                c.Turnar(hiloid);
+                SBMenuF(hiloid);
+                Console.WriteLine("");
             }
 
             if (opcion == 2)
             {
-                c.CrearHiloDirectorio();
-                SBMenuF();
+                Console.WriteLine("Introduce tu fichero | directorio");
+                string ruta = Console.ReadLine();
+                c.EscribirFichero(ruta);
+                c.Cambiar(ControladorHilos.Type.Dir, directory);
+                SBMenuF(hiloid);
+
             }
+
             if (opcion == 3)
             {
-                //Console.WriteLine("Introduce tu fichero");
-                //string fichero = Console.ReadLine();
-                c.Cambiar(ControladorHilos.Type.Dir, directory);
-                SBMenuF();
+                Console.WriteLine("Numero limite de lineas");
+                int lineas = int.Parse(Console.ReadLine());
+                c.LineasMax(lineas);
+                SBMenuF(hiloid);
 
             }
 
             if (opcion == 4)
             {
-                Console.WriteLine("Numero limite de lineas");
-                int lineas = int.Parse(Console.ReadLine());
-                c.LineasMax(lineas);
-                SBMenuF();
-
+                Console.WriteLine("De cuantos segundos es el delay");
+                int delay = int.Parse(Console.ReadLine());
+                c.Delay(ControladorHilos.Type.Dir, delay);
+                SBMenuF(hiloid);
             }
 
             if (opcion == 5)
             {
-                Console.WriteLine("De cuantos segundos es el delay");
-                int delay = int.Parse(Console.ReadLine()) * 1000;
-                c.Delay(ControladorHilos.Type.Dir, delay);
-                SBMenuF();
+                c.BorrarHilo(hiloid);
+                Console.WriteLine("Borraste correctamente tu hilo");
+                Menu();
             }
+
+
+            if (opcion == 6)
+            {
+                c.
+                Console.WriteLine("Borraste correctamente tu hilo");
+                Menu();
+            }
+
             if (opcion == 0) {
                Menu();
             }
-        }
-
-        static void SBMenuD()
-        {
-
-            Console.WriteLine("***************************************************");
-            Console.WriteLine("COMPROBAR MODIFIACIÓN DE DIRECTORIO");
-            Console.WriteLine("1 - ARRANCAR ");
-            Console.WriteLine("2 - PARAR ");
-            Console.WriteLine("3 - Fichero a comprobar ");
-            Console.WriteLine("4 - Delay ");
-            Console.WriteLine("0 - Salir al menú principal ");
-            Console.WriteLine("***************************************************");
-            int op = int.Parse(Console.ReadLine());
-
-            if (op == 1)
-            {
-                c.CrearHiloDirectorio();
-                SBMenuD();
-            }
-
-            if (op == 2)
-            {
-                c.CrearHiloDirectorio();
-                SBMenuD();
-            }
-
-            if (op == 3)
-            {
-                Console.WriteLine(directory);
-                //string fichero = Console.ReadLine();
-                c.ComprobarDirectorio(directory);
-                SBMenuD();
-
-            }
-            if (op == 4)
-            {
-                Console.WriteLine("De cuantos segundos es el delay");
-                int delay = int.Parse(Console.ReadLine()) * 1000;
-                c.Delay(ControladorHilos.Type.Dir, delay);
-                SBMenuD();
-            }
-            if (op == 0) { Menu(); }
-
         }
 
         static void SBMenuH()
@@ -130,6 +102,16 @@ namespace View
 
             if (op == 1)
             {
+                Console.WriteLine("Quieres crear un hilo para el fichero(f) o para directorio(d)");
+                string opcionhilo = Console.ReadLine();
+                if (opcionhilo.Equals("f"))
+                {
+                    c.GenerarHilo(new ServicioFichero());
+                }else if (opcionhilo.Equals("d"))
+                {
+                    c.GenerarHilo(new ServicioDirectorio());
+                }
+                else { Console.WriteLine("Introduce otra vez por favor"); }
                 SBMenuH();
             }
 
@@ -155,30 +137,78 @@ namespace View
         {
 
             int op = -1;
-            while (op != 5)
+            while (op != 0)
             {
-                Console.WriteLine("***************************************************");
-                Console.WriteLine("Servicios Asincronos");
-                Console.WriteLine("Introduce la opción que desea realizar");
-                Console.WriteLine("0 - Cerrar programa ");
-                Console.WriteLine("1 - Comprobar Modificacion de directorio "); //cnd detecte que se han pasado, escribe en log y conf y para hilo
-                Console.WriteLine("2 - Comprobar Lineas de Fichero ");
-                Console.WriteLine("3 - MenuHilos ");
-                Console.WriteLine("***************************************************");
+                if (c.hilos.Count() == 0)
+                {
+                    Console.WriteLine("***************************************************");
+                    Console.WriteLine("Servicios Asincronos");
+                    Console.WriteLine("Introduce la opción que desea realizar");
+                    Console.WriteLine("0 - Cerrar programa ");
+                    Console.WriteLine("1 - Crear Hilo Fichero ");
+                    Console.WriteLine("2 - Crear Hilo Directorio ");
+                    Console.WriteLine("***************************************************");
+                    op = int.Parse(Console.ReadLine());
+                    if (op == 1)
+                    {
+                        c.CrearHiloDirectorio();
+                        Console.Clear();
+                        Menu();
+                    }
+                    if (op == 2)
+                    {
+                        c.CrearHiloFichero();
+                        Menu();
+                    }
+                    else { Console.WriteLine("Prueba de nuevo, tramposo");Menu(); }
+                }
+                else
+                {
+                    c.Mostrar();
+                    Console.WriteLine("***************************************************");
+                    Console.WriteLine("Servicios Asincronos");
+                    Console.WriteLine("Introduce la opción que desea realizar");
+                    Console.WriteLine("0 - Cerrar programa ");
+                    Console.WriteLine("1 - Crear Hilo Fichero ");
+                    Console.WriteLine("2 - Crear Hilo Directorio ");
+                    Console.WriteLine("3 - Opciones hilo");
+                    //Console.WriteLine("3 - Comprobar Modificacion de directorio "); //cnd detecte que se han pasado, escribe en log y conf y para hilo
+                    //Console.WriteLine("4 - Comprobar Lineas de Fichero ");
+                    //Console.WriteLine("3 - MenuHilos ");
+                    Console.WriteLine("***************************************************");
 
-                op = int.Parse(Console.ReadLine());
-                if (op == 1) {
-                    SBMenuD();
+                    op = int.Parse(Console.ReadLine());
+                    if (op == 1)
+                    {
+                        c.CrearHiloDirectorio();
+                        Console.Clear();
+                        Menu();
+                    }
+                    if (op == 2)
+                    {
+                        c.CrearHiloFichero();
+                        Menu();
+                    }
+                    if (op == 3)
+                    {
+                        Console.WriteLine("Dame el id del hilo que quieres modificar");
+                        int hiloid = int.Parse(Console.ReadLine());
+                        if (c.BuscarHilo(hiloid)!=null)
+                        {
+                            SBMenuF(hiloid);
+                        }
+                        else
+                        {
+                            Console.WriteLine("No has introducido bien el id del hilo, prueba de nuevo");
+                            Menu();
+                        }
+                    }
+                    if (op == 5)
+                    {
+                        SBMenuH();
+                    }
+                    else { Environment.Exit(0); }
                 }
-                if (op == 2)
-                {
-                    SBMenuF();
-                }
-                if (op == 3)
-                {
-                    SBMenuH();
-                }
-                else { Environment.Exit(0); }
             }
         }   
     }

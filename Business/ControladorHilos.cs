@@ -17,7 +17,7 @@ namespace Business
 
         public ControladorHilos()
         {
-            this.hilos = hilos;
+            this.hilos = new List<Hilo>();
         }
 
         public enum Type
@@ -43,8 +43,15 @@ namespace Business
                 var hilo = GenerarHilo(SD);
                 hilo.Start();
                 hilos.Add(hilo);
+                SD.activo = true;
             }
 
+        }
+
+        public void Turnar(int id)
+        {
+            Hilo h = DevuelveHilo(id);
+            h.Turnar();
         }
 
         public void CrearHiloFichero()
@@ -58,6 +65,7 @@ namespace Business
                 var hilo = GenerarHilo(SI);
                 hilo.Start();
                 hilos.Add(hilo);
+                SI.activo = true;
             }
         }
 
@@ -100,9 +108,62 @@ namespace Business
         {
             foreach (Hilo h in hilos)
             {
-                Console.WriteLine(h.ToString());
+                Console.WriteLine("[" + h.id  + "] " + h.ser + h.miHilo + " -> " + h.activo);
             }
         }
 
+        public void ArrancarHilo(Type type,string ruta, int lineas)
+        {
+            if(type == Type.Fich)
+            {
+                SI.Arrancar("",0);
+            }
+
+            if (type == Type.Dir)
+            {
+                SD.Arrancar("",0);
+            }
+        }
+
+        public Hilo BuscarHilo(int id)
+        {
+            foreach(Hilo hilin in hilos)
+            {
+                if (hilin.id == id)
+                {
+                    return hilin;
+                }
+            }
+            return null;
+        }
+
+        public Hilo DevuelveHilo(int id)
+        {
+            foreach (Hilo hilin in hilos)
+            {
+                if (hilin.id == id)
+                {
+                    return hilin;
+                }
+            }
+            return null;
+        }
+
+        public void BorrarHilo(int hiloid)
+        {
+            Hilo hilin = DevuelveHilo(hiloid);
+            hilos.Remove(hilin);
+        }
+
+        public bool EscribirFichero(string ruta)
+        {
+            SD.EscribirFichero(ruta);
+            return true;
+        }
+
+        public void GuardarConf(string ruta)
+        {
+
+        }
     }
 }

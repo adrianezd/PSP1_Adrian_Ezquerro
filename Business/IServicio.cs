@@ -19,7 +19,7 @@ namespace Business
         void DefineNumLineas(int lineas);
         void Duerme(int numero);
 
-        void Arrancar();
+        void Arrancar(string directorio, int lineas);
 
         void Parar();
 
