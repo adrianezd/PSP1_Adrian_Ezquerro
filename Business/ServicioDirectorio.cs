@@ -14,6 +14,10 @@ namespace Business
         public bool activo { get; set; }
         public int delay { get; set; }
 
+        public string DameTipo()
+        {
+            return "ServicioDirectorio";
+        }
         public void Comprobar(int id) { }
         public void Comprobar(string directorio)
         {
@@ -46,11 +50,13 @@ namespace Business
 
         }
 
-        public void EscribirFichero(string cont)
+        public void EscribirFichero(string conf)
         {
-            string conf = "conf.txt";
+            string cont = "";
+            //string conf = "conf.txt";
             int line_to_edit = 2;
             cont = "direcRuta=" + cont;
+            Console.WriteLine(cont);
             string[] arrLine = File.ReadAllLines(conf);
             arrLine[line_to_edit - 1] = cont;
             File.WriteAllLines(conf, arrLine);

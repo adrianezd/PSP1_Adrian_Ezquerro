@@ -27,5 +27,7 @@ namespace Business
 
         string AnadirRuta(string ruta);
 
+        string DameTipo();
+
     }
 }

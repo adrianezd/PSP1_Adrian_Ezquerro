@@ -20,6 +20,9 @@ namespace Business
 
         public Data.ServicioFichero F1 = new Data.ServicioFichero();
 
+        public string DameTipo() {
+            return "ServicioFichero";
+        }
         public void Comprobar(int lineas)
         {
             string fichero = "leer.txt";
@@ -72,8 +75,8 @@ namespace Business
 
         public void Arrancar(string directorio, int lineas)
         {
-            activo = true;
-            Comprobar(lineas);
+            //activo = true;
+            //Comprobar(lineas);
         }
         public string BorrarLineas(string input, int linesToSkip)
         {

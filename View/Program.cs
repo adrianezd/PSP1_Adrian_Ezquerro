@@ -17,6 +17,11 @@ namespace View
         {
             Menu();
         }
+        public enum Type
+        {
+            ServicioDirectorio,
+            ServicioFichero
+        }
 
         static void SBMenuF(int hiloid)
         {
@@ -38,26 +43,42 @@ namespace View
             if (opcion == 1)
             {
                 c.Turnar(hiloid);
+                Console.Clear();
                 SBMenuF(hiloid);
-                Console.WriteLine("");
+                //Console.WriteLine("");
+
             }
 
             if (opcion == 2)
             {
                 Console.WriteLine("Introduce tu fichero | directorio");
                 string ruta = Console.ReadLine();
-                c.EscribirFichero(ruta);
-                c.Cambiar(ControladorHilos.Type.Dir, directory);
+                Hilo hilito = c.DevuelveHilo(hiloid);
+                hilito.archivoconf = ruta;
+                //c.EscribirFichero(ruta);
+                //c.Cambiar(ControladorHilos.Type.Dir, directory);
+                Console.Clear();
                 SBMenuF(hiloid);
+
 
             }
 
             if (opcion == 3)
             {
+                Hilo hilito = c.DevuelveHilo(hiloid);
+                string tipo = hilito.DameTipo();
+                if (tipo == "ServicioFichero")
+                {
+                    Console.Clear();
+                    Console.WriteLine("No eres un servicio directorio, no puedes");
+                    SBMenuF(hiloid);
+                }
                 Console.WriteLine("Numero limite de lineas");
                 int lineas = int.Parse(Console.ReadLine());
                 c.LineasMax(lineas);
+                Console.Clear();
                 SBMenuF(hiloid);
+
 
             }
 
@@ -65,13 +86,16 @@ namespace View
             {
                 Console.WriteLine("De cuantos segundos es el delay");
                 int delay = int.Parse(Console.ReadLine());
-                c.Delay(ControladorHilos.Type.Dir, delay);
+                Hilo hilito = c.DevuelveHilo(hiloid);
+                hilito.delay = delay;
+                Console.Clear();
                 SBMenuF(hiloid);
             }
 
             if (opcion == 5)
             {
                 c.BorrarHilo(hiloid);
+                Console.Clear();
                 Console.WriteLine("Borraste correctamente tu hilo");
                 Menu();
             }
@@ -79,8 +103,7 @@ namespace View
 
             if (opcion == 6)
             {
-                c.
-                Console.WriteLine("Borraste correctamente tu hilo");
+                Console.Clear();
                 Menu();
             }
 
@@ -158,6 +181,7 @@ namespace View
                     if (op == 2)
                     {
                         c.CrearHiloFichero();
+                        Console.Clear();
                         Menu();
                     }
                     else { Console.WriteLine("Prueba de nuevo, tramposo");Menu(); }
@@ -187,6 +211,7 @@ namespace View
                     if (op == 2)
                     {
                         c.CrearHiloFichero();
+                        Console.Clear();
                         Menu();
                     }
                     if (op == 3)
@@ -196,6 +221,7 @@ namespace View
                         if (c.BuscarHilo(hiloid)!=null)
                         {
                             SBMenuF(hiloid);
+                            Console.Clear();
                         }
                         else
                         {
@@ -205,6 +231,7 @@ namespace View
                     }
                     if (op == 5)
                     {
+                        Console.Clear();
                         SBMenuH();
                     }
                     else { Environment.Exit(0); }

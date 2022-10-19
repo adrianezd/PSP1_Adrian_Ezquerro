@@ -15,6 +15,7 @@ namespace Business
         public bool activo = false;
         public int delay;
         public string archivoconf;
+        public string tipo;
 
     public void Start()
     {
@@ -43,6 +44,11 @@ namespace Business
         public void Mostrar()
         {
             Console.WriteLine(ToString());
+        }
+
+        public string DameTipo()
+        {
+            return ser.DameTipo();
         }
 }
 }
