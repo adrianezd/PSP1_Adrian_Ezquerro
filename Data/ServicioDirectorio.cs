@@ -26,6 +26,7 @@ namespace Data
         {
             Directory.SetCurrentDirectory(ruta);
         }
+
     }
 
     //fichero a comprobar

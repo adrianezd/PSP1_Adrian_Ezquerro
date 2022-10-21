@@ -15,6 +15,7 @@ namespace Business
         public bool activo = false;
         public int delay;
         public string archivoconf;
+        public string quecomprueba;
         public string tipo;
 
     public void Start()
