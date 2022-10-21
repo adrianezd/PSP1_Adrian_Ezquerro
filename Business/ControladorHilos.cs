@@ -99,16 +99,11 @@ namespace Business
             SI.DefineNumLineas(lineas);
         }
 
-        public void ComprobarDirectorio(string directorio)
-        {
-            SD.Comprobar(directorio);
-        }
-
         public void Mostrar()
         {
             foreach (Hilo h in hilos)
             {
-                Console.WriteLine("[" + h.id  + "] " + h.ser + h.miHilo + " -> " + h.activo);
+                Console.WriteLine("[" + h.id  + "] " + " -> " + h.DameTipo() + " -> ¿Activo? " + h.activo);
             }
         }
 

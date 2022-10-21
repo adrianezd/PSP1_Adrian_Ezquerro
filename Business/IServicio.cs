@@ -8,7 +8,7 @@ namespace Business
 {
     public interface IServicio
     {
-        void Comprobar(int lineas);
+        void Comprobar(int lineas, Hilo h);
 
         bool RutaExiste(string fichero);
 

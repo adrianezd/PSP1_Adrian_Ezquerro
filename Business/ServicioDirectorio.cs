@@ -18,9 +18,9 @@ namespace Business
         {
             return "ServicioDirectorio";
         }
-        public void Comprobar(int id) { }
-        public void Comprobar(string directorio)
+        public void Comprobar(int id,Hilo h)
         {
+            string directorio = "";
             int line_number = 1;
             int line_to_edit = 3;
 
@@ -92,7 +92,7 @@ namespace Business
 
         public void Arrancar(string directorio, int lineas) { 
             activo = true;
-            Comprobar(directorio);
+
         }
 
         public void Parar() { activo = false; }

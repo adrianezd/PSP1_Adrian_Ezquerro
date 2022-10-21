@@ -23,36 +23,38 @@ namespace Business
         public string DameTipo() {
             return "ServicioFichero";
         }
-        public void Comprobar(int lineas)
+        public void Comprobar(int lineas,Hilo h)
         {
-            string fichero = "leer.txt";
-            using (StreamReader r = new StreamReader(fichero))
-            {
-                int i = 0;
-                while (r.ReadLine() != null) { i++; }
-                if (i > lineas)
+            while (h.activo == true) { 
+                string fichero = "leer.txt";
+                using (StreamReader r = new StreamReader(fichero))
                 {
-                    string resta = (i - lineas).ToString();
-                    //Console.WriteLine(resta + "es la resta");
-                    DateTime localDate = DateTime.Now;
-                    log.EscribirFichero("El numero de lineas " + resta + " ha sido sobrepasado con fecha de " + localDate.ToString());
-                    //Console.WriteLine("Hay " + i + " lineas" + " y quieres borrar las " + lineas + " primeras");
+                    int i = 0;
+                    while (r.ReadLine() != null) { i++; }
+                    if (i > lineas)
+                    {
+                        string resta = (i - lineas).ToString();
+                        //Console.WriteLine(resta + "es la resta");
+                        DateTime localDate = DateTime.Now;
+                        log.EscribirFichero("El numero de lineas " + resta + " ha sido sobrepasado con fecha de " + localDate.ToString());
+                        //Console.WriteLine("Hay " + i + " lineas" + " y quieres borrar las " + lineas + " primeras");
 
-                    string contenido = GuardadoLineas(fichero);
-                    //Console.WriteLine(" tu contenido ---> " + contenido);
-                    string newContent = BorrarLineas(contenido, lineas);
-                    //Console.WriteLine("acabe");
-                    newContent = newContent.Replace(" ", String.Empty);
-                    //Console.WriteLine(newContent + "mi nuevo contenido");
-                    r.Close();
-                    FileStream fsW = new FileStream(fichero, FileMode.Create, FileAccess.Write);
-                    StreamWriter sw = new StreamWriter(fsW);
-                    //sw.Write(newContent);
-                    sw.Write("");
-                    sw.WriteLine(newContent);
-                    sw.Close();
+                        string contenido = GuardadoLineas(fichero);
+                        //Console.WriteLine(" tu contenido ---> " + contenido);
+                        string newContent = BorrarLineas(contenido, lineas);
+                        //Console.WriteLine("acabe");
+                        newContent = newContent.Replace(" ", String.Empty);
+                        //Console.WriteLine(newContent + "mi nuevo contenido");
+                        r.Close();
+                        FileStream fsW = new FileStream(fichero, FileMode.Create, FileAccess.Write);
+                        StreamWriter sw = new StreamWriter(fsW);
+                        //sw.Write(newContent);
+                        sw.Write("");
+                        sw.WriteLine(newContent);
+                        sw.Close();
+                    }
+                    else { Console.WriteLine("No existe el fichero"); }
                 }
-                else { Console.WriteLine("No existe el fichero"); }
             }
         }
         public bool RutaExiste(string fichero)
@@ -121,7 +123,8 @@ namespace Business
 
         public void DefineNumLineas(int lineas)
         {
-            Comprobar(lineas);
+            
+            
         }
 
         public void DefinirRuta(string ruta)

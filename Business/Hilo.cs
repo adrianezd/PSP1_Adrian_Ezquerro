@@ -17,13 +17,16 @@ namespace Business
         public string archivoconf;
         public string quecomprueba;
         public string tipo;
+        public int lineas=0;
 
     public void Start()
     {
-        string directorio = "";
-        int lineas = 0;
-        Thread miHilo = new Thread(()=>ser.Arrancar(directorio,lineas));
-        miHilo.Start();
+        if (activo == true)
+        {
+            Thread miHilo = new Thread(() => ser.Arrancar(archivoconf, lineas));
+            miHilo.Start();
+        }
+
     }
 
         public void Turnar()
@@ -40,7 +43,8 @@ namespace Business
         
         public override String ToString()
         {
-            return this.id + Environment.NewLine + this.ser + Environment.NewLine + this.activo + Environment.NewLine + this.delay + Environment.NewLine + this.archivoconf;
+
+            return "id -> " + this.id + Environment.NewLine + "¿activo? -> " + this.activo + Environment.NewLine + "delay -> " + this.delay + Environment.NewLine + "su archivo conf es -> " + this.archivoconf + Environment.NewLine + "tipo -> " + DameTipo()+ Environment.NewLine;
         }
         public void Mostrar()
         {
