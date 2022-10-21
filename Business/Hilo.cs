@@ -44,7 +44,7 @@ namespace Business
         public override String ToString()
         {
 
-            return "id -> " + this.id + Environment.NewLine + "¿activo? -> " + this.activo + Environment.NewLine + "delay -> " + this.delay + Environment.NewLine + "su archivo conf es -> " + this.archivoconf + Environment.NewLine + "tipo -> " + DameTipo()+ Environment.NewLine;
+            return "id -> " + this.id + Environment.NewLine + "analizaré esto -> " + this.quecomprueba + Environment.NewLine + "¿activo? -> " + this.activo + Environment.NewLine  + "lineas -> " + this.lineas  + Environment.NewLine  + "delay -> " + this.delay + Environment.NewLine + "su archivo conf es -> " + this.archivoconf + Environment.NewLine + "tipo -> " + DameTipo()+ Environment.NewLine;
         }
         public void Mostrar()
         {

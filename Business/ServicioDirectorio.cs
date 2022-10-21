@@ -128,9 +128,26 @@ namespace Business
             System.Threading.Thread.Sleep(numero * 1000);
         }
 
-        public string AnadirRuta(string ruta)
+        public bool GuardarConf(Hilo h)
         {
-            return ruta = "@C:\\ " + ruta;
+            using (StreamWriter f = new StreamWriter(h.archivoconf))
+            {
+                f.WriteLine(h.ToString());
+                f.Close();
+                return true;
+                //Console.WriteLine("cont -->" + cont);
+            }
+
+        }
+        public string DevolverConf(string arch)
+        {
+            using (StreamReader r = new StreamReader(arch))
+            {
+                string texto = r.ReadToEnd();
+                Console.WriteLine("Texto es " + texto);
+                //Console.WriteLine("cont -->" + cont);
+            }
+            return "";
         }
 
     }

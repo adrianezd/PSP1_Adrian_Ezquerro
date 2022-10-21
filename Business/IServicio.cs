@@ -25,9 +25,10 @@ namespace Business
 
         void DefinirRuta(string ruta);
 
-        string AnadirRuta(string ruta);
 
         string DameTipo();
+        bool GuardarConf(Hilo h);
+        string DevolverConf(string arch);
 
     }
 }

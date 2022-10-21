@@ -156,9 +156,15 @@ namespace Business
             return true;
         }
 
-        public void GuardarConf(string ruta)
+        public bool GuardarConf(Hilo h)
         {
-
+            return h.ser.GuardarConf(h);
         }
+
+        public string DevolverInfo(Hilo h, string fichero)
+        {
+            return h.ser.DevolverConf(fichero);
+        }
+
     }
 }

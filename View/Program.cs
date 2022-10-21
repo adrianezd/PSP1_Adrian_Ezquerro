@@ -31,12 +31,15 @@ namespace View
             Console.WriteLine("BIENVENIDO AL MENU DE TU HILO " + hilito.DameTipo() + " con id " + hiloid);
             hilito.Mostrar();
             Console.WriteLine("***************************************************");
+            Console.WriteLine("");
+            Console.WriteLine("***************************************************");
             Console.WriteLine("1 - ARRANCAR/PARAR "); 
             Console.WriteLine("2 - Fichero | Directorio a comprobar ");
             Console.WriteLine("3 - Numero límite de lineas ");
             Console.WriteLine("4 - Delay ");
             Console.WriteLine("5 - Borrar Hilo");
             Console.WriteLine("6 - Guardar Configuracion");
+            Console.WriteLine("7 - Carga tu info ");
             Console.WriteLine("0 - Salir al menú principal ");
             Console.WriteLine("***************************************************");
             int opcion = int.Parse(Console.ReadLine());
@@ -52,8 +55,7 @@ namespace View
             //}
             if (opcion == 1)
             {
-                Console.WriteLine();
-                if(hilito.activo==false && String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0) {
+                if(hilito.activo==false && String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0 && String.IsNullOrEmpty(hilito.archivoconf)) {
                     if ((hilito.tipo == "ServicioFichero") && (hilito.lineas==0))
                     {
                         Console.Clear();
@@ -94,7 +96,7 @@ namespace View
                 }
                 Console.WriteLine("Numero limite de lineas");
                 int lineas = int.Parse(Console.ReadLine());
-                c.LineasMax(lineas);
+                hilito.lineas = lineas;
                 Console.Clear();
                 SBMenuF(hiloid);
 
@@ -121,11 +123,43 @@ namespace View
 
             if (opcion == 6)
             {
+                if (hilito.activo == false && String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0 && String.IsNullOrEmpty(hilito.archivoconf))
+                {
+                    if ((hilito.tipo == "ServicioFichero") && (hilito.lineas == 0))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Dame las lineas antes");
+                        SBMenuF(hiloid);
+                    }
+                    Console.Clear();
+                    Console.WriteLine("Debes especificar todo lo necesario antes");
+                    SBMenuF(hiloid);
+                }
                 Console.WriteLine("Introduce tu fichero | directorio");
                 string ruta = Console.ReadLine();
-                hilito.archivoconf = ruta;
+                if (ruta.Contains(".txt"))
+                {
+                    hilito.archivoconf = ruta;
+                    c.GuardarConf(hilito);
+                }
+                else
+                {
+                    ruta = ruta + ".txt";
+                    hilito.archivoconf = ruta;
+                    c.GuardarConf(hilito);
+                }
                 Console.Clear();
                 Menu();
+            }
+
+            if (opcion == 7)
+            {
+                Console.WriteLine("Dame tu fichero para recuperar tu info");
+                string fichero = Console.ReadLine();
+                hilito.archivoconf = fichero;
+                Console.Clear();
+                Console.WriteLine(c.DevolverInfo(hilito, fichero));
+                SBMenuF(hiloid);
             }
 
             if (opcion == 0) {
@@ -159,13 +193,13 @@ namespace View
                     }
                     if (op == 1)
                     {
-                        c.CrearHiloDirectorio();
+                        c.CrearHiloFichero();
                         Console.Clear();
                         Menu();
                     }
                     if (op == 2)
                     {
-                        c.CrearHiloFichero();
+                        c.CrearHiloDirectorio();
                         Console.Clear();
                         Menu();
                     }
