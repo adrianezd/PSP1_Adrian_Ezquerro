@@ -6,100 +6,50 @@ using System.Threading.Tasks;
 
 namespace Business
 {
-    public class ControladorHilos
+    public static class ControladorHilos
     {
-        public List<Hilo> hilos = new List<Hilo>();
+        public static List<Hilo> hilos = new List<Hilo>();
 
-        ServicioDirectorio SD = new ServicioDirectorio();
-        ServicioFichero SI = new ServicioFichero();
+        public enum Tipo{
+            SD,
+            SI
+        }
 
         public static int count;
 
-        public ControladorHilos()
-        {
-            this.hilos = new List<Hilo>();
-        }
-
-        public enum Type
-        {
-            Dir,
-            Fich
-        }
-
-        public Hilo GenerarHilo(IServicio tipo)
+        public static Hilo GenerarHilo(Tipo tipo)
         {
             count++;
-            return new Hilo { id = count, ser = tipo };
+            if(tipo == Tipo.SI) {
+                return new Hilo { id = count, ser = new ServicioFichero() { IdHilo=count} };
+            }
+            if (tipo == Tipo.SD) {
+                return new Hilo { id = count, ser = new ServicioDirectorio() { IdHilo = count } };
+            }
+            return null;
         }
 
-        public void CrearHiloDirectorio()
+        public static void CrearHiloDirectorio()
         {
-            if (SD.activo == true)
-            {
-                SD.Parar();
-            }
-            else
-            {
-                var hilo = GenerarHilo(SD);
-                hilo.Start();
-                hilos.Add(hilo);
-                SD.activo = true;
-            }
-
+            var hilo = GenerarHilo(Tipo.SD);
+            hilos.Add(hilo);
+            hilo.Start();
         }
 
-        public void Turnar(int id)
+        public static void Turnar(int id)
         {
             Hilo h = DevuelveHilo(id);
             h.Turnar();
         }
 
-        public void CrearHiloFichero()
+        public static void CrearHiloFichero()
         {
-            if (SI.activo == true)
-            {
-                SI.Parar();
-            }
-            else
-            {
-                var hilo = GenerarHilo(SI);
-                hilo.Start();
-                hilos.Add(hilo);
-                SI.activo = true;
-            }
+            var hilo = GenerarHilo(Tipo.SI);
+            hilos.Add(hilo);
+            hilo.Start();
         }
 
-        public void Cambiar(Type tipo, string ruta)
-        {
-            if (tipo == Type.Fich)
-            {
-                SI.DefinirRuta(ruta);
-            }
-            if(tipo == Type.Dir)
-            {
-                SD.DefinirRuta(ruta);
-            }
-        }
-
-        public void Delay(Type tipo,int delay)
-        {
-            if (tipo == Type.Fich)
-            {
-                SI.Duerme(delay);
-            }
-            if (tipo == Type.Dir)
-            {
-                SD.Duerme(delay);
-            }
-        }
-
-
-        public void LineasMax(int lineas)
-        {
-            SI.DefineNumLineas(lineas);
-        }
-
-        public void Mostrar()
+        public static void Mostrar()
         {
             foreach (Hilo h in hilos)
             {
@@ -107,20 +57,7 @@ namespace Business
             }
         }
 
-        public void ArrancarHilo(Type type,string ruta, int lineas)
-        {
-            if(type == Type.Fich)
-            {
-                SI.Arrancar("",0);
-            }
-
-            if (type == Type.Dir)
-            {
-                SD.Arrancar("",0);
-            }
-        }
-
-        public Hilo BuscarHilo(int id)
+        public static Hilo BuscarHilo(int id)
         {
             foreach(Hilo hilin in hilos)
             {
@@ -132,7 +69,7 @@ namespace Business
             return null;
         }
 
-        public Hilo DevuelveHilo(int id)
+        public static Hilo DevuelveHilo(int id)
         {
             foreach (Hilo hilin in hilos)
             {
@@ -144,26 +81,22 @@ namespace Business
             return null;
         }
 
-        public void BorrarHilo(int hiloid)
+        public static void BorrarHilo(int hiloid)
         {
             Hilo hilin = DevuelveHilo(hiloid);
             hilos.Remove(hilin);
         }
 
-        public bool EscribirFichero(string ruta)
-        {
-            SD.EscribirFichero(ruta);
-            return true;
-        }
-
-        public bool GuardarConf(Hilo h)
+        public static bool GuardarConf(Hilo h)
         {
             return h.ser.GuardarConf(h);
         }
 
-        public string DevolverInfo(Hilo h, string fichero)
+        public static string DevolverInfo(Hilo h, string fichero)
         {
-            return h.ser.DevolverConf(fichero);
+            string datos = h.ser.DevolverConf(fichero);
+            Console.WriteLine("datos->" + datos);
+            return datos;
         }
 
     }

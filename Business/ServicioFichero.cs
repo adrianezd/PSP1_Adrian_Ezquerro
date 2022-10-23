@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,57 +12,79 @@ namespace Business
 {
     public class ServicioFichero : IServicio
     {
-        string ruta;
-        public int numLineasServicio { get; set; }
-        public bool activo { get; set; }
-        public int delay { get; set; }
-        public BusinessConf conf { get; set; }
         public static BusinessLog log { get; set; } = new BusinessLog();
 
-        public Data.ServicioFichero F1 = new Data.ServicioFichero();
+        public Data.ServicioFichero Fich = new Data.ServicioFichero();
+        public int IdHilo { get; set; }
 
         public string DameTipo() {
             return "ServicioFichero";
         }
-        public void Comprobar(int lineas,Hilo h)
+        public void Comprobar(Hilo h)
         {
+            int lineas = h.lineas;
             while (h.activo == true) { 
-                string fichero = "leer.txt";
+                string fichero = h.quecomprueba;
                 using (StreamReader r = new StreamReader(fichero))
                 {
                     int i = 0;
                     while (r.ReadLine() != null) { i++; }
                     if (i > lineas)
                     {
-                        string resta = (i - lineas).ToString();
-                        //Console.WriteLine(resta + "es la resta");
-                        DateTime localDate = DateTime.Now;
-                        log.EscribirFichero("El numero de lineas " + resta + " ha sido sobrepasado con fecha de " + localDate.ToString());
-                        //Console.WriteLine("Hay " + i + " lineas" + " y quieres borrar las " + lineas + " primeras");
-
-                        string contenido = GuardadoLineas(fichero);
-                        //Console.WriteLine(" tu contenido ---> " + contenido);
-                        string newContent = BorrarLineas(contenido, lineas);
-                        //Console.WriteLine("acabe");
-                        newContent = newContent.Replace(" ", String.Empty);
-                        //Console.WriteLine(newContent + "mi nuevo contenido");
+                        h.activo = false;
+                        int resta = i - lineas;
+                        log.EscribirFichero("El numero de lineas "  + resta.ToString() + " ha sido sobrepasado con fecha de " + DateTime.Now);
                         r.Close();
-                        FileStream fsW = new FileStream(fichero, FileMode.Create, FileAccess.Write);
-                        StreamWriter sw = new StreamWriter(fsW);
-                        //sw.Write(newContent);
-                        sw.Write("");
-                        sw.WriteLine(newContent);
-                        sw.Close();
+                        NuevasLineas(h.quecomprueba, resta);
+                        //string contenido = GuardadoLineas(fichero);
+                        //Console.WriteLine("tu contenido es " + contenido);
+                        //string[] newContent = BorrarLineas(contenido, lineas);
+                        //Console.WriteLine("el new content es " +  newContent);
+                        //r.Close();
+                        //File.WriteAllLines(fichero, newContent.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
+
+
                     }
-                    else { Console.WriteLine("No existe el fichero"); }
+                    h.Duerme();
                 }
+
             }
+        }
+        public void NuevasLineas(string fichero,int lineas)
+        {
+            bool compruebaLineas = true;
+            while (compruebaLineas == true)
+            {
+                try
+                {
+                    compruebaLineas = false;
+                    string[] lines = File.ReadAllLines(fichero);
+                    List<string> lineasAnadir = new List<string>();
+                    int cont = 0;
+                    foreach (string l in lines)
+                    {
+                        if (cont == lineas)
+                        {
+                            lineasAnadir.Add(l);
+                        }
+                        else
+                        {
+                            cont++;
+                        }
+                    }
+                    File.WriteAllLines(fichero, lineasAnadir);
+                    Console.WriteLine("tu output ----> " + lineasAnadir);
+                }
+                catch
+                {
+                    compruebaLineas = true;
+                }
+                }
+
         }
         public bool RutaExiste(string fichero)
         {
-            bool isPath = false;
-            if (File.Exists(fichero)) isPath = true;
-            return isPath;
+            return Fich.RutaExiste(fichero);
         }
 
         public string GuardadoLineas(string fichero)
@@ -75,56 +98,23 @@ namespace Business
             return cont;
         }
 
-        public void Arrancar(string directorio, int lineas)
+        public void Arrancar(int idhilo)
         {
-            //activo = true;
-            //Comprobar(lineas);
+            Comprobar(ControladorHilos.DevuelveHilo(idhilo));
         }
-        public string BorrarLineas(string input, int linesToSkip)
+        public string[] BorrarLineas(string input, int linesToSkip)
         {
-
-            string[] lines = input
-            .Split(Environment.NewLine.ToCharArray())
-            .Skip(linesToSkip + 1)
-            .ToArray();
-
-            string output = string.Join(Environment.NewLine, lines);
-            //Console.WriteLine("tu output ----> " + output);
-            return output;
-
-            //int startIndex = 0;
-            //for (int i = 0; i < linesToSkip; ++i)
-            //    startIndex = input.IndexOf('\n', startIndex) + 1;
-            //return input.Substring(startIndex);
+            return Fich.BorrarLineas(input,linesToSkip);
         }
-
-        public void GuardarContenidoNuevo(string fichero, string contenido)
-        {
-            using (StreamWriter w = new StreamWriter(fichero))
-            {
-                F1.Arrancar();
-            }
-        }
-
 
         public void BorrarFichero(string archivo)
         {
-            File.WriteAllText(archivo, "");
+            Fich.BorrarFichero(archivo);
         }
 
         public void SobreEscribirFichero(string archivo, IEnumerable<string> contenido)
         {
             File.WriteAllLines(archivo, contenido);
-        }
-
-        public void Arrancar() { activo = true; }
-
-        public void Parar() { activo = false; }
-
-        public void DefineNumLineas(int lineas)
-        {
-            
-            
         }
 
         public void DefinirRuta(string ruta)
@@ -134,24 +124,12 @@ namespace Business
                 Directory.SetCurrentDirectory(ruta);
             }
         }
-        public void Duerme(int numero)
-        {
-            string conf = "conf.txt";
-            string newText = "";
-            int line_to_edit = 4;
-            newText = "direcDelay=" + numero;
-            string[] arrLine = File.ReadAllLines(conf);
-            arrLine[line_to_edit - 1] = newText;
-            File.WriteAllLines(conf, arrLine);
-
-            System.Threading.Thread.Sleep(numero * 1000);
-        }
 
         public bool GuardarConf(Hilo h)
         {
             using (StreamWriter f = new StreamWriter(h.archivoconf))
             {
-                f.WriteLine(h.ToString());
+                f.WriteLine(h.Escribir());
                 f.Close();
                 return true;
                 //Console.WriteLine("cont -->" + cont);
@@ -160,15 +138,14 @@ namespace Business
         }
         public string DevolverConf(string arch)
         {
-            //using (StreamWriter f = new StreamWriter(h.archivoconf))
-            //{
-            //    f.WriteLine(h.ToString());
-            //    f.Close();
-            //    return true;
-            //    //Console.WriteLine("cont -->" + cont);
-            //}
-            return "";
-        }
+            using (StreamReader r = new StreamReader(arch))
+            {
+                string texto = r.ReadToEnd();
+                //Console.WriteLine("Texto es " + texto);
+                //Console.WriteLine("cont -->" + cont);
+                return texto;
+            }
 
+        }
     }
 }

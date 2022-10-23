@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessConf.cs" />
     <Compile Include="BusinessLog.cs" />
     <Compile Include="ControladorHilos.cs" />
     <Compile Include="Hilo.cs" />

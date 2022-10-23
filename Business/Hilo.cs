@@ -23,7 +23,7 @@ namespace Business
     {
         if (activo == true)
         {
-            Thread miHilo = new Thread(() => ser.Arrancar(archivoconf, lineas));
+            Thread miHilo = new Thread(() => ser.Arrancar(id));
             miHilo.Start();
         }
 
@@ -34,6 +34,7 @@ namespace Business
             if (activo == false)
             {
                 activo = true;
+                Start();
             }
             else
             {
@@ -44,7 +45,11 @@ namespace Business
         public override String ToString()
         {
 
-            return "id -> " + this.id + Environment.NewLine + "analizaré esto -> " + this.quecomprueba + Environment.NewLine + "¿activo? -> " + this.activo + Environment.NewLine  + "lineas -> " + this.lineas  + Environment.NewLine  + "delay -> " + this.delay + Environment.NewLine + "su archivo conf es -> " + this.archivoconf + Environment.NewLine + "tipo -> " + DameTipo()+ Environment.NewLine;
+            return "id:" + this.id + Environment.NewLine + "confanalizar:" + this.quecomprueba + Environment.NewLine + "activo:" + this.activo + Environment.NewLine  + "lineas:" + this.lineas  + Environment.NewLine  + "delay:" + this.delay + Environment.NewLine + "archivoconf:" + this.archivoconf + Environment.NewLine + "tipo:" + DameTipo()+ Environment.NewLine;
+        }
+        public String Escribir()
+        {
+            return "id-" + this.id + ";confanalizar-" + this.quecomprueba + ";activo-" + this.activo + ";lineas-" + this.lineas + ";delay-" + this.delay + ";archivoconf-" + this.archivoconf + ";tipo-" + DameTipo();
         }
         public void Mostrar()
         {
@@ -54,6 +59,11 @@ namespace Business
         public string DameTipo()
         {
             return ser.DameTipo();
+        }
+
+        public void Duerme()
+        {
+            Thread.Sleep(delay * 1000);
         }
 }
 }

@@ -2,30 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Business;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace View
 {
     public class Program
     {
-        static ControladorHilos c = new ControladorHilos();
         static string directory = Directory.GetCurrentDirectory();
 
         static void Main(string[] args)
         {
             Menu();
         }
-        public enum Type
-        {
-            ServicioDirectorio,
-            ServicioFichero
-        }
 
         static void SBMenuF(int hiloid)
         {
-            Hilo hilito = c.DevuelveHilo(hiloid);
+            Hilo hilito = ControladorHilos.DevuelveHilo(hiloid);
 
             Console.WriteLine("***************************************************");
             Console.WriteLine("BIENVENIDO AL MENU DE TU HILO " + hilito.DameTipo() + " con id " + hiloid);
@@ -43,19 +39,10 @@ namespace View
             Console.WriteLine("0 - Salir al menú principal ");
             Console.WriteLine("***************************************************");
             int opcion = int.Parse(Console.ReadLine());
-            //try
-            //{
-            //    opcion = int.Parse(Console.ReadLine());
-            //}
-            //catch
-            //{
-            //    Console.Clear();
-            //    Console.WriteLine("Introduce una opcion del menú");
-            //    Menu();
-            //}
+
             if (opcion == 1)
             {
-                if(hilito.activo==false && String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0 && String.IsNullOrEmpty(hilito.archivoconf)) {
+                if(String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0) {
                     if ((hilito.tipo == "ServicioFichero") && (hilito.lineas==0))
                     {
                         Console.Clear();
@@ -66,7 +53,7 @@ namespace View
                     Console.WriteLine("Debes especificar todo lo necesario antes");
                     SBMenuF(hiloid);
                 }
-                c.Turnar(hiloid);
+                ControladorHilos.Turnar(hiloid);
                 Console.Clear();
                 SBMenuF(hiloid);
                 //Console.WriteLine("");
@@ -75,9 +62,30 @@ namespace View
 
             if (opcion == 2)
             {
-                Console.WriteLine("Introduce tu fichero | directorio");
+                Console.WriteLine("Introduce tu fichero | directorio. (Si es ruta default, pon def)");
                 string fichero = Console.ReadLine();
-                hilito.quecomprueba = fichero;
+                if (fichero == "def")
+                {
+                    string tipo = hilito.DameTipo();
+                    if (tipo == "ServicioDirectorio")
+                    {
+                        hilito.quecomprueba = Directory.GetCurrentDirectory();
+                        Console.Clear();
+                        SBMenuF(hiloid);
+                    }
+                    else
+                    {
+                        hilito.quecomprueba = Directory.GetCurrentDirectory() + @"\leer.txt";
+                        Console.Clear();
+                        SBMenuF(hiloid);
+                    }
+
+                }
+                else
+                {
+                    hilito.quecomprueba = fichero;
+                }
+
                 Console.Clear();
                 SBMenuF(hiloid);
 
@@ -88,10 +96,10 @@ namespace View
             {
 
                 string tipo = hilito.DameTipo();
-                if (tipo == "ServicioFichero")
+                if (tipo == "ServicioDirectorio")
                 {
                     Console.Clear();
-                    Console.WriteLine("No eres un servicio directorio, no puedes");
+                    Console.WriteLine("No eres un servicio fichero, no puedes");
                     SBMenuF(hiloid);
                 }
                 Console.WriteLine("Numero limite de lineas");
@@ -114,7 +122,7 @@ namespace View
 
             if (opcion == 5)
             {
-                c.BorrarHilo(hiloid);
+                ControladorHilos.BorrarHilo(hiloid);
                 Console.Clear();
                 Console.WriteLine("Borraste correctamente tu hilo");
                 Menu();
@@ -123,7 +131,7 @@ namespace View
 
             if (opcion == 6)
             {
-                if (hilito.activo == false && String.IsNullOrEmpty(hilito.quecomprueba) && hilito.delay == 0 && String.IsNullOrEmpty(hilito.archivoconf))
+                if (String.IsNullOrEmpty(hilito.quecomprueba) || hilito.delay == 0)
                 {
                     if ((hilito.tipo == "ServicioFichero") && (hilito.lineas == 0))
                     {
@@ -140,13 +148,13 @@ namespace View
                 if (ruta.Contains(".txt"))
                 {
                     hilito.archivoconf = ruta;
-                    c.GuardarConf(hilito);
+                    ControladorHilos.GuardarConf(hilito);
                 }
                 else
                 {
                     ruta = ruta + ".txt";
                     hilito.archivoconf = ruta;
-                    c.GuardarConf(hilito);
+                    ControladorHilos.GuardarConf(hilito);
                 }
                 Console.Clear();
                 Menu();
@@ -156,14 +164,40 @@ namespace View
             {
                 Console.WriteLine("Dame tu fichero para recuperar tu info");
                 string fichero = Console.ReadLine();
-                hilito.archivoconf = fichero;
-                Console.Clear();
-                Console.WriteLine(c.DevolverInfo(hilito, fichero));
-                SBMenuF(hiloid);
-            }
+                Console.WriteLine("el fichero es ->" + fichero);
+                //hilito.archivoconf = fichero;
+                //Console.Clear();
+                string infoFile = ControladorHilos.DevolverInfo(hilito, fichero);
+                Console.WriteLine("EL INFO FILE ES -> " + infoFile);
+
+                Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                string[] items = infoFile.TrimEnd(';').Split(';');
+                foreach (string item in items)
+                {
+                    string[] keyValue = item.Split('-');
+                    dictionary.Add(keyValue[0], keyValue[1]);
+                }
+
+                Console.WriteLine(dictionary);
+                if (hilito.DameTipo() != dictionary["tipo"])
+                {
+                    Console.WriteLine("ese fichero no deberia ser para ti... elige otro");
+                }
+                else
+                {
+                    hilito.delay = int.Parse(dictionary["delay"]);
+                    hilito.archivoconf = dictionary["archivoconf"];
+                    hilito.activo = bool.Parse(dictionary["activo"]);
+                    hilito.quecomprueba = dictionary["confanalizar"];
+                    hilito.lineas = int.Parse(dictionary["lineas"]);
+                    SBMenuF(hiloid);
+                }
+                }
+
 
             if (opcion == 0) {
-               Menu();
+                Console.Clear();
+                Menu();
             }
         }
         static void Menu()
@@ -172,8 +206,8 @@ namespace View
             int op = -1;
             while (op != 0)
             {
-                if (c.hilos.Count() == 0)
-                {
+                if (ControladorHilos.hilos.Count() == 0)
+                { 
                     Console.WriteLine("***************************************************");
                     Console.WriteLine("Servicios Asincronos");
                     Console.WriteLine("Introduce la opción que desea realizar");
@@ -188,18 +222,18 @@ namespace View
                     catch
                     {
                         Console.Clear();
-                        Console.WriteLine("Introduce una ocion del menú");
+                        Console.WriteLine("Introduce una opcion del menú");
                         Menu();
                     }
                     if (op == 1)
                     {
-                        c.CrearHiloFichero();
+                        ControladorHilos.CrearHiloFichero();
                         Console.Clear();
                         Menu();
                     }
                     if (op == 2)
                     {
-                        c.CrearHiloDirectorio();
+                        ControladorHilos.CrearHiloDirectorio();
                         Console.Clear();
                         Menu();
                     }
@@ -207,7 +241,7 @@ namespace View
                 }
                 else
                 {
-                    c.Mostrar();
+                    ControladorHilos.Mostrar();
                     Console.WriteLine("***************************************************");
                     Console.WriteLine("Servicios Asincronos");
                     Console.WriteLine("Introduce la opción que desea realizar");
@@ -231,15 +265,13 @@ namespace View
                     }
                     if (op == 1)
                     {
-                        c.CrearHiloFichero();
-                        c.CrearHiloFichero();
+                        ControladorHilos.CrearHiloFichero();
                         Console.Clear();
                         Menu();
                     }
                     if (op == 2)
                     {
-                        c.CrearHiloDirectorio();
-                        c.CrearHiloDirectorio();
+                        ControladorHilos.CrearHiloDirectorio();
                         Console.Clear();
                         Menu();
                     }
@@ -247,13 +279,14 @@ namespace View
                     {
                         Console.WriteLine("Dame el id del hilo que quieres modificar");
                         int hiloid = int.Parse(Console.ReadLine());
-                        if (c.BuscarHilo(hiloid)!=null)
+                        if (ControladorHilos.BuscarHilo(hiloid)!=null)
                         {
                             Console.Clear();
                             SBMenuF(hiloid);
                         }
                         else
                         {
+                            Console.Clear();
                             Console.WriteLine("No has introducido bien el id del hilo, prueba de nuevo");
                             Menu();
                         }
