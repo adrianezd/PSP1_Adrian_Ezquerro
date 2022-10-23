@@ -5,8 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
-using File = System.IO.File;
+
 
 namespace Business
 {
@@ -28,59 +27,21 @@ namespace Business
                 using (StreamReader r = new StreamReader(fichero))
                 {
                     int i = 0;
-                    while (r.ReadLine() != null) { i++; }
+                    while (r.ReadLine() != null) { i++; } 
                     if (i > lineas)
                     {
                         h.activo = false;
                         int resta = i - lineas;
                         log.EscribirFichero("El numero de lineas "  + resta.ToString() + " ha sido sobrepasado con fecha de " + DateTime.Now);
-                        r.Close();
                         NuevasLineas(h.quecomprueba, resta);
-                        //string contenido = GuardadoLineas(fichero);
-                        //Console.WriteLine("tu contenido es " + contenido);
-                        //string[] newContent = BorrarLineas(contenido, lineas);
-                        //Console.WriteLine("el new content es " +  newContent);
-                        //r.Close();
-                        //File.WriteAllLines(fichero, newContent.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
-
-
                     }
                     h.Duerme();
                 }
-
             }
         }
         public void NuevasLineas(string fichero,int lineas)
         {
-            bool compruebaLineas = true;
-            while (compruebaLineas == true)
-            {
-                try
-                {
-                    compruebaLineas = false;
-                    string[] lines = File.ReadAllLines(fichero);
-                    List<string> lineasAnadir = new List<string>();
-                    int cont = 0;
-                    foreach (string l in lines)
-                    {
-                        if (cont == lineas)
-                        {
-                            lineasAnadir.Add(l);
-                        }
-                        else
-                        {
-                            cont++;
-                        }
-                    }
-                    File.WriteAllLines(fichero, lineasAnadir);
-                    Console.WriteLine("tu output ----> " + lineasAnadir);
-                }
-                catch
-                {
-                    compruebaLineas = true;
-                }
-                }
-
+            Fich.NuevasLineas(fichero, lineas);
         }
         public bool RutaExiste(string fichero)
         {
@@ -132,18 +93,22 @@ namespace Business
                 f.WriteLine(h.Escribir());
                 f.Close();
                 return true;
-                //Console.WriteLine("cont -->" + cont);
             }
 
         }
         public string DevolverConf(string arch)
         {
-            using (StreamReader r = new StreamReader(arch))
+            try
             {
-                string texto = r.ReadToEnd();
-                //Console.WriteLine("Texto es " + texto);
-                //Console.WriteLine("cont -->" + cont);
-                return texto;
+                using (StreamReader r = new StreamReader(arch))
+                {
+                    string texto = r.ReadToEnd();
+                    return texto;
+                }
+            }
+            catch
+            {
+                return "";
             }
 
         }

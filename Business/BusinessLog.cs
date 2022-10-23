@@ -9,12 +9,6 @@ namespace Business
 {
     public class BusinessLog
     {
-        string rutaC;
-        string nombreArchivo;
-        bool estado;
-        string dato2 = "";
-        string dato3 = "";
-
         public void EscribirFichero(string contenido)
         {
             string ficherin = "log.txt";

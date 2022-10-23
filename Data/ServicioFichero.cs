@@ -30,11 +30,6 @@ namespace Data
         }
 
         public void Parar() { estado = false; }
-
-        public void DefineNumLineas(int lineas)
-        {
-            
-        }
         public void Duerme(int numero)
         {
             System.Threading.Thread.Sleep(numero);
@@ -43,7 +38,38 @@ namespace Data
         {
             File.WriteAllText(archivo, "");
         }
+        public void NuevasLineas(string fichero, int lineas)
+        {
+            bool compruebaLineas = true;
+            while (compruebaLineas == true)
+            {
+                try
+                {
+                    compruebaLineas = false;
+                    string[] lines = File.ReadAllLines(fichero);
+                    List<string> lineasAnadir = new List<string>();
+                    int cont = 0;
+                    foreach (string l in lines)
+                    {
+                        if (cont == lineas)
+                        {
+                            lineasAnadir.Add(l);
+                        }
+                        else
+                        {
+                            cont++;
+                        }
+                    }
+                    File.WriteAllLines(fichero, lineasAnadir);
+                    Console.WriteLine("tu output ----> " + lineasAnadir);
+                }
+                catch
+                {
+                    compruebaLineas = true;
+                }
+            }
 
+        }
         public void DefinirRuta(string ruta)
         {
             if (RutaExiste(ruta))

@@ -164,32 +164,45 @@ namespace View
             {
                 Console.WriteLine("Dame tu fichero para recuperar tu info");
                 string fichero = Console.ReadLine();
-                Console.WriteLine("el fichero es ->" + fichero);
-                //hilito.archivoconf = fichero;
-                //Console.Clear();
-                string infoFile = ControladorHilos.DevolverInfo(hilito, fichero);
-                Console.WriteLine("EL INFO FILE ES -> " + infoFile);
+                try
+                {
+                    Console.WriteLine("el fichero es ->" + fichero);
+                    //hilito.archivoconf = fichero;
+                    //Console.Clear();
+                    string infoFile = ControladorHilos.DevolverInfo(hilito, fichero);
 
-                Dictionary<string, string> dictionary = new Dictionary<string, string>();
-                string[] items = infoFile.TrimEnd(';').Split(';');
-                foreach (string item in items)
-                {
-                    string[] keyValue = item.Split('-');
-                    dictionary.Add(keyValue[0], keyValue[1]);
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                    string[] items = infoFile.TrimEnd(';').Split(';');
+                    foreach (string item in items)
+                    {
+                        string[] keyValue = item.Split('-');
+                        dictionary.Add(keyValue[0], keyValue[1]);
+                    }
+                    Console.WriteLine("HilitoDameTipo -> " + hilito.DameTipo());
+                    Console.WriteLine("dictionary -> " + dictionary["tipo"]);
+                    if (hilito.DameTipo() == dictionary["tipo"])
+                    {
+                        hilito.delay = int.Parse(dictionary["delay"]);
+                        hilito.archivoconf = dictionary["archivoconf"];
+                        hilito.activo = bool.Parse(dictionary["activo"]);
+                        hilito.quecomprueba = dictionary["confanalizar"];
+                        hilito.lineas = int.Parse(dictionary["lineas"]);
+                        SBMenuF(hiloid);
+                    }
+                    else
+                    {
+                        hilito.delay = int.Parse(dictionary["delay"]);
+                        hilito.archivoconf = dictionary["archivoconf"];
+                        hilito.activo = bool.Parse(dictionary["activo"]);
+                        hilito.quecomprueba = dictionary["confanalizar"];
+                        hilito.lineas = int.Parse(dictionary["lineas"]);
+                        SBMenuF(hiloid);
+                    }
                 }
-
-                Console.WriteLine(dictionary);
-                if (hilito.DameTipo() != dictionary["tipo"])
+                catch
                 {
-                    Console.WriteLine("ese fichero no deberia ser para ti... elige otro");
-                }
-                else
-                {
-                    hilito.delay = int.Parse(dictionary["delay"]);
-                    hilito.archivoconf = dictionary["archivoconf"];
-                    hilito.activo = bool.Parse(dictionary["activo"]);
-                    hilito.quecomprueba = dictionary["confanalizar"];
-                    hilito.lineas = int.Parse(dictionary["lineas"]);
+                    Console.Clear();
+                    Console.WriteLine("Introduce otro archivo");
                     SBMenuF(hiloid);
                 }
                 }

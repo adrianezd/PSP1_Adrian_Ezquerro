@@ -75,7 +75,6 @@ namespace Business
                 f.WriteLine(h.ToString());
                 f.Close();
                 return true;
-                //Console.WriteLine("cont -->" + cont);
             }
 
         }
