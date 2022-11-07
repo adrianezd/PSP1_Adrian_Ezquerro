@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Business
 {
+    public delegate void DelegadoSaludo(string nombre);
     public static class ControladorHilos
     {
+        public static DelegadoSaludo DelegadoSaludador { get; set; }
         public static List<Hilo> hilos = new List<Hilo>();
 
+        //static DelegadoSaludo deleGsaludo = new DelegadoSaludo(GuardaLog);
+        //deleGsaludo();
         public enum Tipo{
             SD,
             SI
@@ -17,14 +21,21 @@ namespace Business
 
         public static int count;
 
+        public static string GuardaLog(string nombre)
+        {
+            return "Hola" + nombre;
+
+        }
+
+
         public static Hilo GenerarHilo(Tipo tipo)
         {
             count++;
             if(tipo == Tipo.SI) {
-                return new Hilo { id = count, ser = new ServicioFichero() { IdHilo=count} };
+                return new Hilo { id = count, ser = new ServicioFichero(DelegadoSaludador) { IdHilo=count} };
             }
             if (tipo == Tipo.SD) {
-                return new Hilo { id = count, ser = new ServicioDirectorio() { IdHilo = count } };
+                return new Hilo { id = count, ser = new ServicioDirectorio(DelegadoSaludador) { IdHilo = count } };
             }
             return null;
         }
@@ -87,8 +98,9 @@ namespace Business
             hilos.Remove(hilin);
         }
 
-        public static bool GuardarConf(Hilo h)
+        public static bool GuardarConf(Hilo h,DelegadoSaludo d)
         {
+            d(h.id.ToString());
             return h.ser.GuardarConf(h);
         }
 

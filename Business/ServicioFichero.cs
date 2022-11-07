@@ -16,6 +16,13 @@ namespace Business
         public Data.ServicioFichero Fich = new Data.ServicioFichero();
         public int IdHilo { get; set; }
 
+        private DelegadoSaludo delegSaludo;
+
+        public ServicioFichero(DelegadoSaludo delegSaludo)
+        {
+            this.delegSaludo = delegSaludo;
+        }
+
         public string DameTipo() {
             return "ServicioFichero";
         }
@@ -30,6 +37,7 @@ namespace Business
                     while (r.ReadLine() != null) { i++; } 
                     if (i > lineas)
                     {
+                        delegSaludo(h.id.ToString());
                         h.activo = false;
                         int resta = i - lineas;
                         log.EscribirFichero("El numero de lineas "  + resta.ToString() + " ha sido sobrepasado con fecha de " + DateTime.Now);

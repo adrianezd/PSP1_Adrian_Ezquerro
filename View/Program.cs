@@ -7,20 +7,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Business;
 using static System.Net.Mime.MediaTypeNames;
+using static Business.ControladorHilos;
 
 namespace View
 {
+    //public delegate string DelegadoSaludo(Hilo h);
     public class Program
     {
         static string directory = Directory.GetCurrentDirectory();
 
+
         static void Main(string[] args)
         {
+            //DelegadoSaludo saludador = (string nombre) =>
+            //{
+            //    return "Hola" + nombre;
+            //};
+            //Console.WriteLine(saludador("nombre"));
+
             Menu();
         }
 
         static void SBMenuF(int hiloid)
         {
+            DelegadoSaludo d1 = new DelegadoSaludo(Avisar);
+            ControladorHilos.DelegadoSaludador = d1;
             Hilo hilito = ControladorHilos.DevuelveHilo(hiloid);
 
             Console.WriteLine("***************************************************");
@@ -156,7 +167,7 @@ namespace View
                     hilito.archivoconf = ruta;
                     ControladorHilos.GuardarConf(hilito);
                 }
-                Console.Clear();
+                //Console.Clear(); quito este clear para que se vea por consola que hago el ejercicio
                 Menu();
             }
 
@@ -307,6 +318,12 @@ namespace View
                     else { Environment.Exit(0); }
                 }
             }
-        }   
+        }
+        private static void Avisar(string nombre)
+        {
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine("Acaba de saltar la alarma del hilo " + nombre);
+            Console.WriteLine("-------------------------------------");
+        }
     }
 }

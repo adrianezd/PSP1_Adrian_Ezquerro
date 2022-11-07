@@ -17,23 +17,6 @@ namespace Data
             this.estado = estado;
         }
 
-        public void ComprobarLineas(string fichero,int lineas)
-        {
-
-        }
-        public bool ComprobarRuta(string fichero){
-            return File.Exists(fichero);
-        }
-
-        public void Arrancar() { 
-            estado = true;
-        }
-
-        public void Parar() { estado = false; }
-        public void Duerme(int numero)
-        {
-            System.Threading.Thread.Sleep(numero);
-        }
         public void BorrarFichero(string archivo)
         {
             File.WriteAllText(archivo, "");

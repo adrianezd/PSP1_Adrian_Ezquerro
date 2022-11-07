@@ -15,6 +15,13 @@ namespace Business
         public static BusinessLog log { get; set; } = new BusinessLog();
         public Data.ServicioDirectorio Dir = new Data.ServicioDirectorio();
 
+        private DelegadoSaludo delegSaludo;
+
+        public ServicioDirectorio(DelegadoSaludo delegSaludo)
+        {
+            this.delegSaludo = delegSaludo;
+        }
+
         public string DameTipo()
         {
             return "ServicioDirectorio";
@@ -22,11 +29,12 @@ namespace Business
         public void Comprobar(Hilo h)
         {
             while (h.activo == true)
-            {
+            { 
                 DateTime dt = Directory.GetLastWriteTime(h.quecomprueba);
                 DateTime fecha = DateTime.Parse(GetLastWrite("conf.txt"));
                     if (fecha < dt)
                     {
+                        delegSaludo(h.id.ToString());
                         log.EscribirFichero("El directorio " + h.quecomprueba + " ha sido sobreescrito con fecha de " + DateTime.Now);
                         File.WriteAllText("conf.txt","lastWrite=" + dt.ToString());
                         h.activo= false;
