@@ -25,13 +25,14 @@ namespace View
             //};
             //Console.WriteLine(saludador("nombre"));
 
+            DelegadoSaludo d1 = new DelegadoSaludo(Avisar);
+            ControladorHilos.DelegadoSaludador = d1;
+
             Menu();
         }
 
         static void SBMenuF(int hiloid)
-        {
-            DelegadoSaludo d1 = new DelegadoSaludo(Avisar);
-            ControladorHilos.DelegadoSaludador = d1;
+        { 
             Hilo hilito = ControladorHilos.DevuelveHilo(hiloid);
 
             Console.WriteLine("***************************************************");
@@ -65,7 +66,7 @@ namespace View
                     SBMenuF(hiloid);
                 }
                 ControladorHilos.Turnar(hiloid);
-                Console.Clear();
+                //Console.Clear();
                 SBMenuF(hiloid);
                 //Console.WriteLine("");
 
@@ -168,7 +169,7 @@ namespace View
                     ControladorHilos.GuardarConf(hilito);
                 }
                 //Console.Clear(); quito este clear para que se vea por consola que hago el ejercicio
-                Menu();
+                SBMenuF(hiloid);
             }
 
             if (opcion == 7)
@@ -322,7 +323,7 @@ namespace View
         private static void Avisar(string nombre)
         {
             Console.WriteLine("-------------------------------------");
-            Console.WriteLine("Acaba de saltar la alarma del hilo " + nombre);
+            Console.WriteLine("Acaba de saltar la alarma del hilo " + nombre + " con fecha de " DateTime.Now.ToString());
             Console.WriteLine("-------------------------------------");
         }
     }

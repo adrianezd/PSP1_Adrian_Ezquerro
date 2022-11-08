@@ -37,11 +37,13 @@ namespace Business
                     while (r.ReadLine() != null) { i++; } 
                     if (i > lineas)
                     {
-                        delegSaludo(h.id.ToString());
+                        //Console.WriteLine("Saltó el delegado");
                         h.activo = false;
                         int resta = i - lineas;
                         log.EscribirFichero("El numero de lineas "  + resta.ToString() + " ha sido sobrepasado con fecha de " + DateTime.Now);
+                        delegSaludo("id");
                         NuevasLineas(h.quecomprueba, resta);
+
                     }
                     h.Duerme();
                 }

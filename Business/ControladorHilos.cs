@@ -98,9 +98,8 @@ namespace Business
             hilos.Remove(hilin);
         }
 
-        public static bool GuardarConf(Hilo h,DelegadoSaludo d)
+        public static bool GuardarConf(Hilo h)
         {
-            d(h.id.ToString());
             return h.ser.GuardarConf(h);
         }
 
